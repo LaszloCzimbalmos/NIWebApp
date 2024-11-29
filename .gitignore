@@ -10,3 +10,5 @@
 /BookLender/BookLender.Shared/bin/
 /BookLender/BookLender.Shared/obj/
 /BookLender/BookLenderAPI/obj/Release/
+*.db-wal
+*.db-shm
