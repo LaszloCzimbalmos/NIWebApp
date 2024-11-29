@@ -3,10 +3,10 @@
 ################################################################################
 
 /BookLender/.vs/BookLender
-/BookLender/BookLenderAPI/bin/Debug/net8.0
-/BookLender/BookLenderAPI/obj/Debug/net8.0
+/BookLender/BookLenderAPI/bin/
+/BookLender/BookLenderAPI/obj/
 /BookLender/.vs/ProjectEvaluation
 /.vs
-/BookLender/BookLender.Shared/bin/Debug/net8.0
-/BookLender/BookLender.Shared/obj
-/BookLender/BookLenderAPI/obj/Release/net8.0
+/BookLender/BookLender.Shared/bin/
+/BookLender/BookLender.Shared/obj/
+/BookLender/BookLenderAPI/obj/Release/

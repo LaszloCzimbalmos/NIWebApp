@@ -1,4 +1,4 @@
-@BookLenderAPI_HostAddress = http://localhost:5109
+@BookLenderAPI_HostAddress = http://localhost:5072
 
 GET {{BookLenderAPI_HostAddress}}/weatherforecast/
 Accept: application/json
