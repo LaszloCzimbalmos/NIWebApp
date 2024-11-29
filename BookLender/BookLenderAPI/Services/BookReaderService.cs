@@ -19,7 +19,7 @@ namespace BookLenderAPI.Services
 
         public async Task AddAsync(BookReader bookReader)
         {
-            var checkedBookReader = GetByNameAsync(bookReader.Name);
+            var checkedBookReader = await GetByNameAsync(bookReader.Name);
 
             if (checkedBookReader is not null)
             {
@@ -44,7 +44,6 @@ namespace BookLenderAPI.Services
 
         public async Task<BookReader> GetByNameAsync(string name)
         {
-            // Query the BookReader table by email (case insensitive)
             return await _dataBase.BookReaders
                                  .FirstOrDefaultAsync(reader => reader.Name == name);
         }
