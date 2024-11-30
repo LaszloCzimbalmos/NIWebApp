@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace BookLender.Shared.Models
 {
@@ -32,6 +31,7 @@ namespace BookLender.Shared.Models
             {
                 return new ValidationResult("The loan date cannot be earlier than today.");
             }
+
             return ValidationResult.Success;
         }
 
@@ -42,6 +42,7 @@ namespace BookLender.Shared.Models
             {
                 return new ValidationResult("The return due date must be later than the loan date.");
             }
+
             return ValidationResult.Success;
         }
     }

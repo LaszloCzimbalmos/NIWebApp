@@ -13,6 +13,6 @@ namespace BookLenderAPI.Contexts
 
         public virtual DbSet<Book> Books { get; set; }
 
-        public DbSet<Loan> Loans { get; set; }
+        public virtual DbSet<Loan> Loans { get; set; }
     }
 }

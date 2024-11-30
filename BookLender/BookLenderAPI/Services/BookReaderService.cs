@@ -4,6 +4,7 @@ using BookLenderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookLenderAPI.Services
@@ -45,29 +46,29 @@ namespace BookLenderAPI.Services
         private async Task<BookReader> GetByNameAsync(string name)
         {
             return await _dataBase.BookReaders
-                                 .FirstOrDefaultAsync(reader => reader.Name == name);
+                                 .FirstOrDefaultAsync(r => string.Equals(r.Name, name));
         }
 
-        public async Task UpdateAsync(BookReader bookReader, int id)
+        public async Task UpdateAsync(BookReader newBookReader, int id)
         {
-            if (id != bookReader.ReaderId)
+            if (id != newBookReader.ReaderId)
             {
                 throw new NotSupportedException($"Error! Required IDs does not match to update: " +
-                    $"Updating '{id}' with '{bookReader.ReaderId}'");
+                    $"Updating '{id}' with '{newBookReader.ReaderId}'");
             }
 
-            var updateReader = await GetAsync(bookReader.ReaderId);
+            var updateReader = await GetAsync(newBookReader.ReaderId);
 
-            if (updateReader is null)
-            {
-                throw new Exception($"Error! Reader not found with ID '{id}'");
-            }
-
-            updateReader.Name = bookReader.Name;
-            updateReader.Address = bookReader.Address;
-            updateReader.BirthDate = bookReader.BirthDate;
+            updateReader.Name = newBookReader.Name;
+            updateReader.Address = newBookReader.Address;
+            updateReader.BirthDate = newBookReader.BirthDate;
 
             await _dataBase.SaveChangesAsync();
+        }
+
+        public async Task<List<BookReader>> GetAllAsync()
+        {
+            return await _dataBase.BookReaders.ToListAsync();
         }
 
         public async Task DeleteAsync(int id)

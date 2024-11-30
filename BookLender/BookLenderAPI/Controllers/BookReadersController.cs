@@ -2,12 +2,13 @@
 using BookLenderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookLenderAPI.Controllers
 {
     [ApiController]
-    [Route("api/BookReader")]
+    [Route("api/book-readers")]
     public class BookReadersController : ControllerBase
     {
         private readonly IBookReaderService _bookReaderService;
@@ -46,6 +47,12 @@ namespace BookLenderAPI.Controllers
             }
         }
 
+        [HttpGet("all")]
+        public async Task<ActionResult<List<BookReader>>> Get()
+        {
+            return Ok(await _bookReaderService.GetAllAsync());
+        }
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] BookReader newBookReader)
         {
@@ -63,6 +70,7 @@ namespace BookLenderAPI.Controllers
                 return NotFound(e.Message);
             }
         }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
