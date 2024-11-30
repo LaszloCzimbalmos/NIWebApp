@@ -36,16 +36,38 @@ namespace BookLenderAPI.Services
 
             if (bookReader is null)
             {
-                throw new Exception($"No reader with ID '{id}'");
+                throw new Exception($"No reader exist with ID '{id}'");
             }
 
             return bookReader;
         }
 
-        public async Task<BookReader> GetByNameAsync(string name)
+        private async Task<BookReader> GetByNameAsync(string name)
         {
             return await _dataBase.BookReaders
                                  .FirstOrDefaultAsync(reader => reader.Name == name);
+        }
+
+        public async Task UpdateAsync(BookReader bookReader, int id)
+        {
+            if (id != bookReader.ReaderId)
+            {
+                throw new NotSupportedException($"Error! Required IDs does not match to update: " +
+                    $"Updating '{id}' with '{bookReader.ReaderId}'");
+            }
+
+            var updateReader = await GetAsync(bookReader.ReaderId);
+
+            if (updateReader is null)
+            {
+                throw new Exception($"Error! Reader not found with ID '{id}'");
+            }
+
+            updateReader.Name = bookReader.Name;
+            updateReader.Address = bookReader.Address;
+            updateReader.BirthDate = bookReader.BirthDate;
+
+            await _dataBase.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)

@@ -10,6 +10,8 @@ namespace BookLenderAPI.Services.Interfaces
 
         Task<BookReader> GetAsync(int id);
 
+        public Task UpdateAsync(BookReader bookReader, int id);
+
         public Task DeleteAsync(int id);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BookLenderAPI.Controllers
 {
     [ApiController]
-    [Route("BookReader")]
+    [Route("api/BookReader")]
     public class BookReadersController : ControllerBase
     {
         private readonly IBookReaderService _bookReaderService;
@@ -41,6 +41,24 @@ namespace BookLenderAPI.Controllers
                 return Ok(bookReader);
             }
             catch (Exception e) // TODO: custom exception
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] BookReader newBookReader)
+        {
+            try
+            {
+                await _bookReaderService.UpdateAsync(newBookReader, id);
+                return Ok();
+            }
+            catch (NotSupportedException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
             {
                 return NotFound(e.Message);
             }
