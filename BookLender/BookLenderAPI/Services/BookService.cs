@@ -30,7 +30,7 @@ namespace BookLenderAPI.Services
             await _dataBase.SaveChangesAsync();
         }
 
-        private async Task<Book> GetByTitleAsync(string title)
+        public async Task<Book> GetByTitleAsync(string title)
         {
             return await _dataBase.Books.FirstOrDefaultAsync(b => string.Equals(b.Title, title)); 
         }

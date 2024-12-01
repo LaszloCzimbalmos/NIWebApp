@@ -10,6 +10,8 @@ namespace BookLenderAPI.Services.Interfaces
 
         Task<BookReader> GetAsync(int id);
 
+        public Task<BookReader> GetByNameAsync(string name);
+
         Task<List<BookReader>> GetAllAsync();
 
         public Task UpdateAsync(BookReader bookReader, int id);

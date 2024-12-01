@@ -45,5 +45,13 @@ namespace BookLender.Shared.Models
 
             return ValidationResult.Success;
         }
+
+        public Loan(int readerId, int bookId, DateTime loanDate, DateTime returnDueDate)
+        {
+            ReaderId = readerId;
+            BookId = bookId;
+            LoanDate = loanDate;
+            ReturnDueDate = returnDueDate;
+        }
     }
 }
