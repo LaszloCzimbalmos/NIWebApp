@@ -69,9 +69,12 @@ namespace BookLenderAPI.Services
             await _dataBase.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var book = await GetAsync(id);
+
+            _dataBase.Remove(book);
+            await _dataBase.SaveChangesAsync();
         }
     }
 }

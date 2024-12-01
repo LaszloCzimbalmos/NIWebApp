@@ -73,14 +73,9 @@ namespace BookLenderAPI.Services
 
         public async Task DeleteAsync(int id)
         {
-            var checkedBookreader = await _dataBase.FindAsync<BookReader>(id);
+            var bookReader = await GetAsync(id);
 
-            if (checkedBookreader is null)
-            {
-                throw new Exception("Error! Reader does not exist.");
-            }
-
-            _dataBase.Remove(checkedBookreader);
+            _dataBase.Remove(bookReader);
             await _dataBase.SaveChangesAsync();
         }
     }

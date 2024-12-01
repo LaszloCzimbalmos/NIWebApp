@@ -1,10 +1,11 @@
-﻿using BookLender.Shared.Models;
-using BookLenderAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using BookLender.Shared.Models;
+using BookLenderAPI.Services.Interfaces;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookLenderAPI.Controllers
 {
@@ -64,6 +65,20 @@ namespace BookLenderAPI.Controllers
             catch (NotSupportedException e)
             {
                 return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _bookService.DeleteAsync(id);
+                return Ok();
             }
             catch (Exception e)
             {
