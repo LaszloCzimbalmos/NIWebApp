@@ -16,3 +16,5 @@
 /BookLender/BookLenderAPI/obj/Debug/net8.0/BookLenderAPI.AssemblyInfoInputs.cache
 /BookLender/BookLenderAPI/obj/Debug/net8.0/BookLenderAPI.AssemblyInfo.cs
 /BookLender/BookLenderAPI/BookLenderDatabase.db
+/BookLender/BookLenderUI/obj
+/BookLender/BookLenderUI/bin/Debug/net8.0
