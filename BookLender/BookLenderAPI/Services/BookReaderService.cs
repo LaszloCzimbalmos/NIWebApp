@@ -43,7 +43,7 @@ namespace BookLenderAPI.Services
             return bookReader;
         }
 
-        private async Task<BookReader> GetByNameAsync(string name)
+        public async Task<BookReader> GetByNameAsync(string name)
         {
             return await _dataBase.BookReaders
                                  .FirstOrDefaultAsync(r => string.Equals(r.Name, name));

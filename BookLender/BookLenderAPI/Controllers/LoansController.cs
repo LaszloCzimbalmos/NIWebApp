@@ -1,12 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookLender.Shared.Models;
+using BookLenderAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace BookLenderAPI.Controllers
 {
-    public class LoansController : Controller
+    [ApiController]
+    [Route("api/loans")]
+    public class LoansController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly ILoanService _loanService;
+        public LoansController(ILoanService loanService)
         {
-            return View();
+            _loanService = loanService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Loan loan )
+        {
+            try
+            {
+                await _loanService.AddAsync(loan);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

@@ -25,6 +25,7 @@ namespace BookLenderAPI
 
             builder.Services.AddScoped<IBookReaderService, BookReaderService>();
             builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<ILoanService, LoanService>();
 
             builder.Services.AddDbContext<BookLenderContext>(options =>
             {
