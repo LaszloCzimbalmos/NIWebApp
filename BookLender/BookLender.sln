@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLenderAPI", "BookLenderAPI\BookLenderAPI.csproj", "{9C55D5F0-11E5-4BFB-A0A4-43125EB55E60}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLender.Shared", "BookLender.Shared\BookLender.Shared.csproj", "{8F6229FB-B0E4-4C2F-B2D0-EE7A15A88E5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookLenderUI", "BookLenderUI\BookLenderUI.csproj", "{7CF6BE47-C443-4198-B82E-BCE69201EEE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8F6229FB-B0E4-4C2F-B2D0-EE7A15A88E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F6229FB-B0E4-4C2F-B2D0-EE7A15A88E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F6229FB-B0E4-4C2F-B2D0-EE7A15A88E5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF6BE47-C443-4198-B82E-BCE69201EEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF6BE47-C443-4198-B82E-BCE69201EEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF6BE47-C443-4198-B82E-BCE69201EEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF6BE47-C443-4198-B82E-BCE69201EEE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

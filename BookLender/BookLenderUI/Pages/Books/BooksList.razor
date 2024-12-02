@@ -1,0 +1,62 @@
+﻿@page "/books"
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+@inject IBookService BookService
+
+<h3>Book Inventory</h3>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Publisher</th>
+                        <th scope="col">Publication Year</th>
+                        <th scope="col">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (_books == null)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">Loading...</td>
+                        </tr>
+                    }
+                    else if (!_books.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No readers found.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var book in _books)
+                        {
+                            <tr>
+                                <td>@book.InventoryNumber</td>
+                                <td>@book.Title</td>
+                                <td>@book.Author</td>
+                                <td>@book.Publisher</td>
+                                <td>@book.PublicationYear</td>
+                                <td><a href="/book/@book.InventoryNumber" class="btn btn-outline-info">View</a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Book> _books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await BookService.GetAllBooksAsync();
+    }
+}

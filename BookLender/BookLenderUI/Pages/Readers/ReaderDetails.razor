@@ -1,0 +1,55 @@
+﻿@page "/reader/{id:int}"
+
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+@using BookLenderUI.Components
+
+@inject NavigationManager NavigationManager
+@inject IBookReaderService BookReaderService
+
+<h3>ReaderDetails</h3>
+
+@if (_bookReader is not null && !_errored)
+{
+
+	<BookReaderForm BookReader="_bookReader" OnValidSubmit="UpdateAsync" ButtonText="Update Reader Data"/>
+
+	<button class="btn btn-danger form-control mt-3" @onclick="() => DeleteAsync()">Delete</button>
+}
+else
+{
+	<p>Loading...</p>
+}
+
+@code {
+	private bool _errored = false;
+	private BookReader _bookReader;
+
+	[Parameter]
+	public int Id { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			_bookReader = await BookReaderService.GetReaderAsync(Id);
+		}
+		catch (Exception)
+		{
+			_errored = true;
+		}
+
+	}
+	private async Task UpdateAsync()
+	{
+		await BookReaderService.UpdateReaderAsync(_bookReader);
+		NavigationManager.NavigateTo("readers");
+	}
+
+	private async Task DeleteAsync()
+	{
+		await BookReaderService.DeleteReaderAsync(Id);
+		NavigationManager.NavigateTo("readers");
+	}
+	
+}

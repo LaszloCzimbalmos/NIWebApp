@@ -1,0 +1,62 @@
+﻿@page "/readers"
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+@inject IBookReaderService BookReaderSercive
+
+<h3>Reader Inventory</h3>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Date of Birth</th>
+                        <th scope="col">Details</th>
+                        <th scope="col">Rented Books</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (bookReaders == null)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">Loading...</td>
+                        </tr>
+                    }
+                    else if (!bookReaders.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">No readers found.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var reader in bookReaders)
+                        {
+                            <tr>
+                                <td>@reader.ReaderId</td>
+                                <td>@reader.Name</td>
+                                <td>@reader.Address</td>
+                                <td>@reader.BirthDate.ToShortDateString()</td>
+                                <td><a href="/reader/@reader.ReaderId" class="btn btn-outline-info">View</a></td>
+                                <td><a href="/loans/@reader.Name" class="ms-4 btn btn-outline-dark">List</a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<BookReader> bookReaders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bookReaders = await BookReaderSercive.GetAllAsync();
+    }
+}

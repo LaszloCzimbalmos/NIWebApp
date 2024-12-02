@@ -1,0 +1,38 @@
+﻿@using BookLender.Shared.Models;
+
+<EditForm Model="BookReader" OnValidSubmit="() => OnValidSubmit()">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText @bind-Value="BookReader.Name" class="form-control" />
+        <ValidationMessage For="() => BookReader.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Adress</label>
+        <InputText @bind-Value="BookReader.Address" class="form-control" />
+        <ValidationMessage For="() => BookReader.Address" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Birth date</label>
+        <InputDate @bind-Value="BookReader.BirthDate" class="form-control" />
+        <ValidationMessage For="() => BookReader.BirthDate" />
+    </div>
+
+    <button class="btn btn-primary form-control" type="submit">@ButtonText</button>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public BookReader BookReader { get; set; }
+
+    [Parameter]
+    public Func<Task> OnValidSubmit { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+}

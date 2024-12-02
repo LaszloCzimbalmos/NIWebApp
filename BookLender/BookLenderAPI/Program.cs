@@ -42,8 +42,11 @@ namespace BookLenderAPI
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
 
             app.MapControllers();
 
