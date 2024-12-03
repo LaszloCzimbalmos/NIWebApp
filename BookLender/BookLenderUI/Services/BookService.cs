@@ -14,6 +14,11 @@ namespace BookLenderUI.Services
             _httpClient = httpClient;
         }
 
+        public async Task AddBookAsync(Book book)
+        {
+            await _httpClient.PostAsJsonAsync(BaseEndpointUrl, book);
+        }
+
         public async Task<Book> GetBookAsync(int id)
         {
             return await _httpClient.GetFromJsonAsync<Book>($"{BaseEndpointUrl}/{id}");
@@ -27,6 +32,11 @@ namespace BookLenderUI.Services
         public async Task UpdateBookAsync(Book newBook)
         {
             await _httpClient.PutAsJsonAsync<Book>($"{BaseEndpointUrl}/{newBook.InventoryNumber}", newBook);
+        }
+
+        public async Task DeleteBookAsync(int id)
+        {
+            await _httpClient.DeleteAsync($"{BaseEndpointUrl}/{id}");
         }
     }
 }

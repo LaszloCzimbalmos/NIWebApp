@@ -7,14 +7,14 @@
 @inject NavigationManager NavigationManager
 @inject IBookService BookService
 
-<h3>ReaderDetails</h3>
+<h3>Book Details</h3>
 
 @if (_book is not null && !_errored)
 {
 
 	<BookForm Book="_book" OnValidSubmit="UpdateAsync" ButtonText="Update Reader Data" />
 
-	//<button class="btn btn-danger form-control mt-3" @onclick="() => DeleteAsync()">Delete</button>
+	<button class="btn btn-danger form-control mt-3" @onclick="() => DeleteAsync()">Delete</button>
 }
 else
 {
@@ -46,12 +46,10 @@ else
 		NavigationManager.NavigateTo("books");
 	}
 
-	/*
 	private async Task DeleteAsync()
 	{
-		await BookReaderService.DeleteReaderAsync(Id);
-		NavigationManager.NavigateTo("readers");
+		await BookService.DeleteBookAsync(Id);
+		NavigationManager.NavigateTo("books");
 	}
-	*/
 
 }

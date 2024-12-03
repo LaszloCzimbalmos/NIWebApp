@@ -1,0 +1,26 @@
+﻿@page "/readers/add"
+
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+@using BookLenderUI.Components
+@using System
+
+@inject NavigationManager NavigationManager
+@inject IBookReaderService BookReaderService
+
+<h3>Add New Reader</h3>
+
+<BookReaderForm BookReader="_newBookReader" OnValidSubmit="AddAsync" ButtonText="Add To Inventory" />
+
+@code {
+	private BookReader _newBookReader = new()
+	{
+		BirthDate = new DateTime(2003, 6, 27)
+	};
+
+	private async Task AddAsync()
+	{
+		await BookReaderService.AddReaderAsync(_newBookReader);
+		NavigationManager.NavigateTo("readers");
+	}
+}

@@ -1,0 +1,22 @@
+﻿@page "/books/add"
+
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+@using BookLenderUI.Components
+
+@inject NavigationManager NavigationManager
+@inject IBookService BookService
+
+<h3>Add New Book</h3>
+
+<BookForm Book="_newBook" OnValidSubmit="AddAsync" ButtonText="Add To Inventory" />
+
+@code {
+	private Book _newBook = new();
+
+	private async Task AddAsync()
+	{
+		await BookService.AddBookAsync(_newBook);
+		NavigationManager.NavigateTo("books");
+	}
+ }

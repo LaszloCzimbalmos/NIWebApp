@@ -4,6 +4,8 @@ namespace BookLenderUI.Services.Interfaces
 {
     public interface IBookReaderService
     {
+        public Task AddReaderAsync(BookReader bookReader);
+
         public Task<BookReader> GetReaderAsync(int id);
 
         public Task<List<BookReader>> GetAllAsync();
