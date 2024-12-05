@@ -1,0 +1,72 @@
+﻿@page "/loans/{name}"
+
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+
+@inject ILoanService LoanService
+@inject IBookReaderService BookReaderService
+
+@if (_bookReader is not null)
+{
+    <h3>Rented By @Name</h3>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead class="text-center table-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Publication Year</th>
+                            <th scope="col">Manage Rent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_books == null)
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">Loading...</td>
+                            </tr>
+                        }
+                        else if (!_books.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">No loans found.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var book in _books)
+                            {
+                                <tr class="text-center">
+                                    <td>@book.InventoryNumber</td>
+                                    <td>@book.Title</td>
+                                    <td>@book.Author</td>
+                                    <td>@book.PublicationYear</td>
+                                    <td><a href="/loan/@book.InventoryNumber/@_bookReader.ReaderId" class="btn btn-outline-info">View</a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Book> _books;
+
+    private BookReader _bookReader;
+
+    [Parameter]
+    public string Name { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await LoanService.GetRentedBooksForReader(Name);
+        _bookReader = await BookReaderService.GetReaderByNameAsync(Name);
+    }
+}

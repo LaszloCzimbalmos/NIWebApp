@@ -1,0 +1,32 @@
+﻿@using BookLender.Shared.Dto;
+
+<EditForm Model="LoanDto" OnValidSubmit="() => OnValidSubmit()">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label">Who will rent this book?</label>
+        <InputText @bind-Value="LoanDto.ReaderName" class="form-control" />
+        <ValidationMessage For="() => LoanDto.ReaderName" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">For how long? (1-6 months)</label>
+        <InputNumber @bind-Value=LoanDto.Months class="form-control" />
+        <ValidationMessage For="() => LoanDto.Months" />
+    </div>
+
+    <button class="btn btn-primary form-control" type="submit">@ButtonText</button>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public LoanDto LoanDto { get; set; }
+
+    [Parameter]
+    public Func<Task> OnValidSubmit { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+}

@@ -1,6 +1,6 @@
 ﻿using BookLender.Shared.Models;
 using BookLenderAPI.Contexts;
-using BookLenderAPI.Dto;
+using BookLender.Shared.Dto;
 using BookLenderAPI.Services;
 using BookLenderAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -106,6 +106,18 @@ namespace BookLenderAPI.Services
             var loan = new Loan(reader.ReaderId, book.InventoryNumber, todayDate, loanDueDate);
 
             await AddAsync(loan);
+        }
+
+        public async Task<Loan> GetLoanByBookAndReader(int bookId, int readerId)
+        {
+            var loan = await _dataBase.Loans.Where(loan => int.Equals(loan.BookId, bookId) &&
+                                                       int.Equals(loan.ReaderId, readerId)).FirstOrDefaultAsync();
+            if (loan is null)
+            {
+                throw new NotSupportedException("Loan does not exist");
+            }
+
+            return loan;
         }
 
         public async Task UpdateAsync(int id, Loan loan)

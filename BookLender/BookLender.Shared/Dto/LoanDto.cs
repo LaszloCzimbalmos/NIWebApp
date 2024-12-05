@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookLenderAPI.Dto
+namespace BookLender.Shared.Dto
 {
     public class LoanDto
     {

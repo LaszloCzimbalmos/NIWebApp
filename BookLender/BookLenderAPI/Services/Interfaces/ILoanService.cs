@@ -1,5 +1,5 @@
 ﻿using BookLender.Shared.Models;
-using BookLenderAPI.Dto;
+using BookLender.Shared.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,6 +14,8 @@ namespace BookLenderAPI.Services.Interfaces
         Task<List<Loan>> GetAllAsync();
 
         public Task<List<Book>> GetRentedBooksForReader(string readerName);
+
+        public Task<Loan> GetLoanByBookAndReader(int bookId, int readerId);
 
         public Task CreateBookLoan(LoanDto loanDto);
 

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BookLender.Shared.Models
 {
@@ -48,6 +49,16 @@ namespace BookLender.Shared.Models
 
         public Loan(int readerId, int bookId, DateTime loanDate, DateTime returnDueDate)
         {
+            ReaderId = readerId;
+            BookId = bookId;
+            LoanDate = loanDate;
+            ReturnDueDate = returnDueDate;
+        }
+
+        [JsonConstructor]
+        public Loan(int loanId, int readerId, int bookId, DateTime loanDate, DateTime returnDueDate)
+        {
+            LoanId = loanId;
             ReaderId = readerId;
             BookId = bookId;
             LoanDate = loanDate;

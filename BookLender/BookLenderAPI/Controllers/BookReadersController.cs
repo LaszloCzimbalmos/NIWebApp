@@ -47,6 +47,12 @@ namespace BookLenderAPI.Controllers
             }
         }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<BookReader>> Get(string name)
+        {
+            return Ok(await _bookReaderService.GetByNameAsync(name));
+        }
+
         [HttpGet("all")]
         public async Task<ActionResult<List<BookReader>>> Get()
         {

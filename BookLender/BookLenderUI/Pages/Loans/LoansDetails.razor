@@ -1,0 +1,90 @@
+﻿@page "/loan/{bookId:int}/{readerId:int}"
+
+@using BookLender.Shared.Models;
+@using BookLenderUI.Services.Interfaces
+@using BookLenderUI.Components
+
+@inject NavigationManager NavigationManager
+@inject ILoanService LoanService
+@inject IBookReaderService BookReaderService
+
+<h3>Rent Details</h3>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Reader ID</th>
+                        <th scope="col">Book ID</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Remaining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (_errored)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center alert-danger">Loan not found</td>
+                        </tr>
+                    }
+                    else if (_loan == null)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">Loading...</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>@_loan.LoanId</td>
+                            <td>@_loan.ReaderId</td>
+                            <td>@_loan.BookId</td>
+                            <td>@_loan.LoanDate.ToShortDateString()</td>
+                            <td>@_loan.ReturnDueDate.ToShortDateString()</td>
+                            <td>x day</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button class="btn btn-danger form-control mt-3" @onclick="() => DeleteAsync()">Close Rent</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _errored = false;
+    private Loan _loan;
+
+    [Parameter]
+    public int BookId { get; set; }
+
+    [Parameter]
+    public int ReaderId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _loan = await LoanService.GetLoanByBookAndReader(BookId, ReaderId); 
+        }
+        catch (Exception)
+        {
+            _errored = true;
+        }
+
+    }
+
+    private async Task DeleteAsync()
+    {
+        await LoanService.DeleteLoanAsync(_loan.LoanId);
+
+        var backToReader = await BookReaderService.GetReaderAsync(ReaderId);
+        NavigationManager.NavigateTo($"loans/{backToReader.Name}");
+    }
+    
+}

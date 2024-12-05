@@ -21,6 +21,7 @@
                         <th scope="col">Author</th>
                         <th scope="col">Publisher</th>
                         <th scope="col">Publication Year</th>
+                        <th scope="col">Renting</th>
                         <th scope="col">Details</th>
                     </tr>
                 </thead>
@@ -28,13 +29,13 @@
                     @if (_books == null)
                     {
                         <tr>
-                            <td colspan="6" class="text-center">Loading...</td>
+                            <td colspan="7" class="text-center">Loading...</td>
                         </tr>
                     }
                     else if (!_books.Any())
                     {
                         <tr>
-                            <td colspan="6" class="text-center">No readers found.</td>
+                            <td colspan="7" class="text-center">No readers found.</td>
                         </tr>
                     }
                     else
@@ -47,6 +48,7 @@
                                 <td>@book.Author</td>
                                 <td>@book.Publisher</td>
                                 <td>@book.PublicationYear</td>
+                                <td><a href="/loans/create-loan/@book.InventoryNumber" class="btn btn-outline-success">Rent</a></td>
                                 <td><a href="/book/@book.InventoryNumber" class="btn btn-outline-info">View</a></td>
                             </tr>
                         }

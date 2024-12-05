@@ -25,6 +25,11 @@ namespace BookLenderUI.Services
             return await _httpClient.GetFromJsonAsync<BookReader>($"{BaseEndpointUrl}/{id}");
         }
 
+        public async Task<BookReader> GetReaderByNameAsync(string name)
+        {
+            return await _httpClient.GetFromJsonAsync<BookReader>($"{BaseEndpointUrl}/{name}");
+        }
+
         public async Task<List<BookReader>> GetAllAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<BookReader>>($"{BaseEndpointUrl}/all");

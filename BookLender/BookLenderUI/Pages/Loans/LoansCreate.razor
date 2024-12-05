@@ -1,0 +1,55 @@
+﻿@page "/loans/create-loan/{bookId:int}"
+
+@using BookLender.Shared.Dto
+@using BookLenderUI.Services.Interfaces
+@using BookLenderUI.Components
+@using BookLender.Shared.Models
+
+@inject NavigationManager NavigationManager
+@inject IBookService BookService
+@inject ILoanService LoanService
+
+
+@if (_book is not null && !_errored)
+{
+	<h3>Rent Out @_book.Title</h3>
+
+	<LoanForm LoanDto="_loan" OnValidSubmit="CreateAsync" ButtonText="Rent Out" />
+}
+else
+{
+	<p>Loading...</p>
+}
+
+@code {
+	private bool _errored = false;
+	private Book _book;
+	private LoanDto _loan;
+
+	[Parameter]
+	public int BookId { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			_book = await BookService.GetBookAsync(BookId);
+			_loan = new LoanDto()
+				{
+					BookTitle = _book.Title,
+					
+				};
+		}
+		catch (Exception)
+		{
+			_errored = true;
+		}
+
+	}
+
+	public async Task CreateAsync()
+	{
+		await LoanService.CreateLoanAsync(_loan);
+		NavigationManager.NavigateTo($"/loans/{_loan.ReaderName}");
+	}
+}

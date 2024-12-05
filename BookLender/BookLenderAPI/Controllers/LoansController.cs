@@ -1,10 +1,11 @@
 ﻿using BookLender.Shared.Models;
-using BookLenderAPI.Dto;
+using BookLender.Shared.Dto;
 using BookLenderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookLenderAPI.Controllers
 {
@@ -61,6 +62,19 @@ namespace BookLenderAPI.Controllers
                 return Ok(rentedBooks);
             }
             catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpGet("get-loan/{bookId:int}/{readerId:int}")]
+        public async Task<ActionResult<Loan>> Get(int bookId, int readerId)
+        {
+            try
+            {
+                return Ok(await _loanService.GetLoanByBookAndReader(bookId, readerId));
+            }
+            catch (NotSupportedException e)
             {
                 return NotFound(e.Message);
             }
