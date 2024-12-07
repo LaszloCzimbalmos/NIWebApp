@@ -111,13 +111,33 @@ namespace BookLenderAPI.Services
         public async Task<Loan> GetLoanByBookAndReader(int bookId, int readerId)
         {
             var loan = await _dataBase.Loans.Where(loan => int.Equals(loan.BookId, bookId) &&
-                                                       int.Equals(loan.ReaderId, readerId)).FirstOrDefaultAsync();
+                                                           int.Equals(loan.ReaderId, readerId)).FirstOrDefaultAsync();
             if (loan is null)
             {
                 throw new NotSupportedException("Loan does not exist");
             }
 
             return loan;
+        }
+
+        public async Task<List<Loan>> GetDueSoonLoans()
+        {
+            return (await _dataBase.Loans.ToListAsync())
+                .Where(loan => CalculateRemainingRentDays(loan.ReturnDueDate) <= 3 &&
+                               CalculateRemainingRentDays(loan.ReturnDueDate) >= 0)
+                .ToList();
+        }
+
+        public async Task<List<Loan>> GetLateLoans()
+        {
+            return (await _dataBase.Loans.ToListAsync())
+                .Where(loan => CalculateRemainingRentDays(loan.ReturnDueDate) < 0)
+                .ToList();
+        }
+
+        private int CalculateRemainingRentDays(DateTime dueDate)
+        {
+            return (dueDate - DateTime.Now).Days;
         }
 
         public async Task UpdateAsync(int id, Loan loan)

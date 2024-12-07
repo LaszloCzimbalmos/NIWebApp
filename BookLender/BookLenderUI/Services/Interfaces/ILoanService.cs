@@ -9,6 +9,10 @@ namespace BookLenderUI.Services.Interfaces
 
         public Task<Loan> GetLoanByBookAndReader(int bookId, int readerId);
 
+        public Task<List<Loan>> GetLateLoans();
+
+        public Task<List<Loan>> GetDueSoonLoans();
+
         public Task CreateLoanAsync(LoanDto loanDto);
 
         public Task DeleteLoanAsync(int id);

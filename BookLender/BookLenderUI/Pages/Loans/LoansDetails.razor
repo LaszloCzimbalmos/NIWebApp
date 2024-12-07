@@ -8,7 +8,11 @@
 @inject ILoanService LoanService
 @inject IBookReaderService BookReaderService
 
-<h3>Rent Details</h3>
+<div class="d-flex align-items-baseline gap-4">
+    <h3 class="fw-bold mb-0">Loan Details</h3>
+
+    <button class="btn btn-outline-warning fw-bold border-2 mt-1">Expand Rental Time</button>
+</div>
 
 <div class="container mt-4">
     <div class="row">
@@ -45,7 +49,7 @@
                             <td>@_loan.BookId</td>
                             <td>@_loan.LoanDate.ToShortDateString()</td>
                             <td>@_loan.ReturnDueDate.ToShortDateString()</td>
-                            <td>x day</td>
+                            <td>@_remainingRentDays day</td>
                         </tr>
                     }
                 </tbody>
@@ -57,6 +61,7 @@
 
 @code {
     private bool _errored = false;
+    private int _remainingRentDays;
     private Loan _loan;
 
     [Parameter]
@@ -70,7 +75,9 @@
     {
         try
         {
-            _loan = await LoanService.GetLoanByBookAndReader(BookId, ReaderId); 
+            _loan = await LoanService.GetLoanByBookAndReader(BookId, ReaderId);
+            _remainingRentDays = CalculateRemainingRentDays(_loan.ReturnDueDate);
+
         }
         catch (Exception)
         {
@@ -85,6 +92,11 @@
 
         var backToReader = await BookReaderService.GetReaderAsync(ReaderId);
         NavigationManager.NavigateTo($"loans/{backToReader.Name}");
+    }
+
+    private int CalculateRemainingRentDays(DateTime dueDate)
+    {
+        return (dueDate - DateTime.Now).Days;
     }
     
 }

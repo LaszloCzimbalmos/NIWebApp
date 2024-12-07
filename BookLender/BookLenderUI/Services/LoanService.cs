@@ -25,6 +25,16 @@ namespace BookLenderUI.Services
             return await _httpClient.GetFromJsonAsync<Loan>($"{BaseEndpointUrl}/get-loan/{bookId}/{readerId}");
         }
 
+        public async Task<List<Loan>> GetDueSoonLoans()
+        {
+            return await _httpClient.GetFromJsonAsync<List<Loan>>($"{BaseEndpointUrl}/due-soon");
+        }
+
+        public async Task<List<Loan>> GetLateLoans()
+        {
+            return await _httpClient.GetFromJsonAsync<List<Loan>>($"{BaseEndpointUrl}/late");
+        }
+
         public async Task CreateLoanAsync(LoanDto loanDto)
         {
             await _httpClient.PostAsJsonAsync<LoanDto>($"{BaseEndpointUrl}/add-loan", loanDto);

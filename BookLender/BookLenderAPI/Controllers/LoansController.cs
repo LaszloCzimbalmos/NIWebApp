@@ -48,7 +48,7 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<List<Loan>>> Get()
+        public async Task<ActionResult<List<Loan>>> GetAll()
         {
             return Ok(await _loanService.GetAllAsync());
         }
@@ -65,6 +65,18 @@ namespace BookLenderAPI.Controllers
             {
                 return NotFound(e.Message);
             }
+        }
+
+        [HttpGet("due-soon")]
+        public async Task<ActionResult<List<Loan>>> GetDueSoon()
+        {
+            return Ok(await _loanService.GetDueSoonLoans());
+        }
+
+        [HttpGet("late")]
+        public async Task<ActionResult<List<Loan>>> GetLate()
+        {
+            return Ok(await _loanService.GetLateLoans());
         }
 
         [HttpGet("get-loan/{bookId:int}/{readerId:int}")]
