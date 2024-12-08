@@ -11,7 +11,7 @@
 <div class="d-flex align-items-baseline gap-4">
     <h3 class="fw-bold mb-0">Loan Details</h3>
 
-    <button class="btn btn-outline-warning fw-bold border-2 mt-1">Expand Rental Time</button>
+    <button class="btn btn-outline-warning fw-bold border-2 mt-1" @onclick="() => ExpandRentTime()">Expand Rental Time</button>
 </div>
 
 <div class="container mt-4">
@@ -38,7 +38,11 @@
                     else if (_loan == null)
                     {
                         <tr>
-                            <td colspan="6" class="text-center">Loading...</td>
+                            <td colspan="6" class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
                         </tr>
                     }
                     else
@@ -84,6 +88,21 @@
             _errored = true;
         }
 
+    }
+
+    private async Task ExpandRentTime()
+    {
+        try
+        {
+            _loan.ReturnDueDate = _loan.ReturnDueDate.AddMonths(1);
+            _loan.LoanDate = DateTime.Now;
+
+            await LoanService.UpdateLoan(_loan);
+            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+        }
+        catch (Exception)
+        {
+            _errored = true;        }
     }
 
     private async Task DeleteAsync()

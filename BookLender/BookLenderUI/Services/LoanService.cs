@@ -40,6 +40,11 @@ namespace BookLenderUI.Services
             await _httpClient.PostAsJsonAsync<LoanDto>($"{BaseEndpointUrl}/add-loan", loanDto);
         }
 
+        public async Task UpdateLoan(Loan loan)
+        {
+            await _httpClient.PutAsJsonAsync<Loan>($"{BaseEndpointUrl}/{loan.LoanId}", loan);
+        }
+
         public async Task DeleteLoanAsync(int id)
         {
             await _httpClient.DeleteAsync($"{BaseEndpointUrl}/{id}");

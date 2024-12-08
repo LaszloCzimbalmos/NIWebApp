@@ -15,6 +15,8 @@ namespace BookLenderUI.Services.Interfaces
 
         public Task CreateLoanAsync(LoanDto loanDto);
 
+        public Task UpdateLoan(Loan loan);
+
         public Task DeleteLoanAsync(int id);
     }
 }
