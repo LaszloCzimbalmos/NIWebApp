@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using BookLender.Shared.Models;
+using BookLenderAPI.Exceptions;
 using BookLenderAPI.Services.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BookLenderAPI.Controllers
 {
@@ -14,10 +16,12 @@ namespace BookLenderAPI.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly ILogger<BooksController> _logger;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService, ILogger<BooksController> logger)
         {
             _bookService = bookService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -26,10 +30,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _bookService.AddAsync(book);
+                _logger.LogInformation("Book added successfully!");
+
                 return Ok();
             }
-            catch (Exception e)
+            catch (AlreadyExistsException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return BadRequest(e.Message);
             }
         }
@@ -40,10 +47,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 var book = await _bookService.GetAsync(id);
+                _logger.LogInformation($"Book retrieved with ID '{id}'");
+
                 return Ok(book);
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -51,7 +61,10 @@ namespace BookLenderAPI.Controllers
         [HttpGet("all")]
         public async Task<ActionResult<List<Book>>> Get()
         {
-            return Ok(await _bookService.GetAllAsync());
+            var books = await _bookService.GetAllAsync();
+            _logger.LogInformation("All books retrieved!");
+
+            return Ok(books);
         }
 
         [HttpPut("{id:int}")]
@@ -60,14 +73,18 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _bookService.UpdateAsync(id, book);
+                _logger.LogInformation("Book updated succesfully!");
+
                 return Ok();
             }
-            catch (NotSupportedException e)
+            catch (IdMismatchException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return BadRequest(e.Message);
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -78,10 +95,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _bookService.DeleteAsync(id);
+                _logger.LogInformation($"Book deleted with ID '{id}'");
+
                 return Ok();
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }

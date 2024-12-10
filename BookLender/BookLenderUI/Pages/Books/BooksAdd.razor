@@ -9,14 +9,42 @@
 
 <h3>Add New Book</h3>
 
-<BookForm Book="_newBook" OnValidSubmit="AddAsync" ButtonText="Add To Inventory" />
+@if (_errorMessage is not null)
+{
+	<div class="alert alert-danger" role="alert">
+		@_errorMessage
+	</div>
+}
+
+<BookForm Book="_newBook" OnValidSubmit="AddAsync" ButtonText="Add To Inventory"/>
 
 @code {
-	private Book _newBook = new();
+	private Book _newBook = new()
+		{
+			PublicationYear = 2000
+		};
+
+	private string _errorMessage { get; set; }
 
 	private async Task AddAsync()
 	{
-		await BookService.AddBookAsync(_newBook);
-		NavigationManager.NavigateTo("books");
+		try 
+		{
+			await BookService.AddBookAsync(_newBook);
+			NavigationManager.NavigateTo("books");
+		}
+		catch (Exception e)
+		{
+			_errorMessage = e.Message;
+			StateHasChanged();
+			_ = ClearErrorMessageAfterDelay();
+		}
 	}
- }
+
+	private async Task ClearErrorMessageAfterDelay()
+	{
+		await Task.Delay(6000);
+		_errorMessage = null;
+		StateHasChanged();
+	}
+}

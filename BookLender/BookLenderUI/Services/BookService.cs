@@ -16,7 +16,13 @@ namespace BookLenderUI.Services
 
         public async Task AddBookAsync(Book book)
         {
-            await _httpClient.PostAsJsonAsync(BaseEndpointUrl, book);
+            var response = await _httpClient.PostAsJsonAsync(BaseEndpointUrl, book);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception(errorMessage);
+            }
         }
 
         public async Task<Book> GetBookAsync(int id)

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
+using BookLenderAPI.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace BookLenderAPI.Controllers
 {
@@ -14,9 +16,11 @@ namespace BookLenderAPI.Controllers
     public class LoansController : ControllerBase
     {
         private readonly ILoanService _loanService;
-        public LoansController(ILoanService loanService)
+        private readonly ILogger<LoansController> _logger;
+        public LoansController(ILoanService loanService, ILogger<LoansController> logger)
         {
             _loanService = loanService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -25,10 +29,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _loanService.AddAsync(loan);
-                return Ok("Succesfully added loan");
+                _logger.LogInformation("Loan added successfully!");
+
+                return Ok();
             }
-            catch (Exception e)
+            catch (AlreadyExistsException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return BadRequest(e.Message);
             }
         }
@@ -39,18 +46,15 @@ namespace BookLenderAPI.Controllers
             try
             {
                 var loan = await _loanService.GetAsync(id);
+                _logger.LogInformation($"Loan retrieved with ID {id}");
+
                 return Ok(loan);
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
-        }
-
-        [HttpGet("all")]
-        public async Task<ActionResult<List<Loan>>> GetAll()
-        {
-            return Ok(await _loanService.GetAllAsync());
         }
 
         [HttpGet("list-loans/{name}")]
@@ -59,10 +63,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 var rentedBooks = await _loanService.GetRentedBooksForReader(name);
+                _logger.LogInformation($"Rented books retrieved for '{name}'");
+
                 return Ok(rentedBooks);
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -70,12 +77,14 @@ namespace BookLenderAPI.Controllers
         [HttpGet("due-soon")]
         public async Task<ActionResult<List<Loan>>> GetDueSoon()
         {
+            _logger.LogInformation("Due soon rents are retrieved!");
             return Ok(await _loanService.GetDueSoonLoans());
         }
 
         [HttpGet("late")]
         public async Task<ActionResult<List<Loan>>> GetLate()
         {
+            _logger.LogInformation("Late rents are retrieved!");
             return Ok(await _loanService.GetLateLoans());
         }
 
@@ -84,10 +93,12 @@ namespace BookLenderAPI.Controllers
         {
             try
             {
+                _logger.LogInformation($"Retrieved loan with BookID: {bookId}, ReaderID: {readerId}");
                 return Ok(await _loanService.GetLoanByBookAndReader(bookId, readerId));
             }
-            catch (NotSupportedException e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -98,10 +109,18 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _loanService.CreateBookLoan(loanDto);
-                return Ok("Succesfully created loan");
+                _logger.LogInformation("Loan is created successfully!");
+
+                return Ok();
             }
-            catch (Exception e)
+            catch (AlreadyExistsException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
+                return BadRequest(e.Message);
+            }
+            catch (NotFoundException e)
+            {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -112,14 +131,18 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _loanService.UpdateAsync(id, newLoan);
-                return Ok("Loan data updated!");
+                _logger.LogInformation("Loan is updated successfully!");
+
+                return Ok();
             }
-            catch (NotSupportedException e)
+            catch (IdMismatchException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return BadRequest(e.Message);
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -130,10 +153,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _loanService.DeleteAsync(id);
-                return Ok($"Loan with ID '{id}' is deleted succesfully!");
+                _logger.LogInformation($"Loan with ID '{id}' is deleted succesfully!");
+
+                return Ok();
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }

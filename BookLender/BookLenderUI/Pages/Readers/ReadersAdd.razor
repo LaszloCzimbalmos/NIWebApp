@@ -10,17 +10,42 @@
 
 <h3>Add New Reader</h3>
 
+@if (_errorMessage is not null)
+{
+	<div class="alert alert-danger" role="alert">
+		@_errorMessage
+	</div>
+}
+
 <BookReaderForm BookReader="_newBookReader" OnValidSubmit="AddAsync" ButtonText="Add To Inventory" />
 
 @code {
+	private string _errorMessage { get; set; }
+
 	private BookReader _newBookReader = new()
 	{
-		BirthDate = new DateTime(2003, 6, 27)
+		BirthDate = new DateTime(2000, 1, 1)
 	};
 
 	private async Task AddAsync()
 	{
-		await BookReaderService.AddReaderAsync(_newBookReader);
-		NavigationManager.NavigateTo("readers");
+		try 
+		{
+			await BookReaderService.AddReaderAsync(_newBookReader);
+			NavigationManager.NavigateTo("readers");
+		}
+		catch (Exception e)
+		{
+			_errorMessage = e.Message;
+			StateHasChanged();
+			_ = ClearErrorMessageAfterDelay();
+		}
+	}
+
+	private async Task ClearErrorMessageAfterDelay()
+	{
+		await Task.Delay(6000);
+		_errorMessage = null;
+		StateHasChanged();
 	}
 }

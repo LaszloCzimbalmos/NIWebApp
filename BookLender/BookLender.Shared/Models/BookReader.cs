@@ -20,7 +20,17 @@ namespace BookLender.Shared.Models
 
         [Required]
         [DataType(DataType.Date)]
-        // TODO: Custom validation
+        [CustomValidation(typeof(BookReader), nameof(ValidateBirthDate))]
         public DateTime BirthDate { get; set; }
+
+        public static ValidationResult ValidateBirthDate(DateTime birthDate, ValidationContext context)
+        {
+            if (birthDate.Year < 1900)
+            {
+                return new ValidationResult("The birth date can't be before 1900");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BookLender.Shared.Models;
+using BookLenderAPI.Exceptions;
 using BookLenderAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,10 +14,12 @@ namespace BookLenderAPI.Controllers
     public class BookReadersController : ControllerBase
     {
         private readonly IBookReaderService _bookReaderService;
+        private readonly ILogger<BookReadersController> _logger;
 
-        public BookReadersController(IBookReaderService bookReaderService)
+        public BookReadersController(IBookReaderService bookReaderService, ILogger<BookReadersController> logger)
         {
             _bookReaderService = bookReaderService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -24,10 +28,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 await _bookReaderService.AddAsync(bookReader);
+                _logger.LogInformation("New reader added!");
+
                 return Ok();
             }
-            catch (Exception e) // TODO: custom exception
+            catch (AlreadyExistsException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return BadRequest(e.Message);
             }
 
@@ -39,10 +46,13 @@ namespace BookLenderAPI.Controllers
             try
             {
                 var bookReader = await _bookReaderService.GetAsync(id);
+                _logger.LogInformation($"Reader retrieved with ID '{id}'");
+
                 return Ok(bookReader);
             }
-            catch (Exception e) // TODO: custom exception
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -67,12 +77,14 @@ namespace BookLenderAPI.Controllers
                 await _bookReaderService.UpdateAsync(newBookReader, id);
                 return Ok();
             }
-            catch (NotSupportedException e)
+            catch (IdMismatchException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return BadRequest(e.Message);
             }
-            catch (Exception e)
+            catch (NotFoundException e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }
@@ -86,10 +98,13 @@ namespace BookLenderAPI.Controllers
                 var bookReader = await _bookReaderService.GetAsync(id);
                 await _bookReaderService.DeleteAsync(id);
 
+                _logger.LogInformation($"Reader deleted with ID '{id}'");
+
                 return Ok();
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);
             }
         }

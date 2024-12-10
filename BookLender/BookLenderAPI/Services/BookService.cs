@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using BookLenderAPI.Contexts;
 using System.Collections.Generic;
+using BookLenderAPI.Exceptions;
 
 namespace BookLenderAPI.Services
 {
@@ -23,7 +24,7 @@ namespace BookLenderAPI.Services
 
             if (checkedBook is not null)
             {
-                throw new Exception("Error! Book already exist. Try other title.");
+                throw new AlreadyExistsException($"Error! Book already exist with title '{book.Title}'");
             }
 
             await _dataBase.AddAsync(book);
@@ -40,7 +41,7 @@ namespace BookLenderAPI.Services
 
             if (book is null)
             {
-                throw new Exception($"Book does not exist with ID '{id}'");
+                throw new NotFoundException($"Book does not exist with ID '{id}'");
             }
 
             return book;
@@ -55,7 +56,7 @@ namespace BookLenderAPI.Services
         {
             if (newBook.InventoryNumber != id)
             {
-                throw new NotSupportedException($"Error! Required IDs does not match to update: " +
+                throw new IdMismatchException($"Error! Required IDs does not match to update: " +
                     $"Updating '{id}' with '{newBook.InventoryNumber}'");
             }
 

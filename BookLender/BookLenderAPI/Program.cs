@@ -8,6 +8,9 @@ using BookLenderAPI.Contexts;
 using BookLenderAPI.Services.Interfaces;
 using BookLenderAPI.Services;
 
+using Serilog;
+using Microsoft.Extensions.Logging;
+
 namespace BookLenderAPI
 {
     public class Program
@@ -31,6 +34,16 @@ namespace BookLenderAPI
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
                 options.UseLazyLoadingProxies();
+            });
+
+            builder.Services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.AddSerilog(
+                    new LoggerConfiguration()
+                        .MinimumLevel.Information()
+                        .WriteTo.Console()
+                        .CreateLogger());
             });
 
             var app = builder.Build();

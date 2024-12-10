@@ -9,8 +9,14 @@
 @inject IBookService BookService
 @inject ILoanService LoanService
 
+@if (_errorMessage is not null)
+{
+	<div class="alert alert-danger" role="alert">
+		@_errorMessage
+	</div>
+}
 
-@if (_book is not null && !_errored)
+@if (_book is not null)
 {
 	<h3>Rent Out @_book.Title</h3>
 
@@ -22,7 +28,7 @@ else
 }
 
 @code {
-	private bool _errored = false;
+	private string _errorMessage { get; set; }
 	private Book _book;
 	private LoanDto _loan;
 
@@ -37,19 +43,36 @@ else
 			_loan = new LoanDto()
 				{
 					BookTitle = _book.Title,
-					
 				};
 		}
-		catch (Exception)
+		catch (Exception e)
 		{
-			_errored = true;
+			_errorMessage = e.Message;
+			StateHasChanged();
+			_ = ClearErrorMessageAfterDelay();
 		}
 
 	}
 
 	public async Task CreateAsync()
 	{
-		await LoanService.CreateLoanAsync(_loan);
-		NavigationManager.NavigateTo($"/loans/{_loan.ReaderName}");
+		try
+		{
+			await LoanService.CreateLoanAsync(_loan);
+			NavigationManager.NavigateTo($"/loans/{_loan.ReaderName}");
+		}
+		catch (Exception e)
+		{
+			_errorMessage = e.Message;
+			StateHasChanged();
+			_ = ClearErrorMessageAfterDelay();
+		}
+	}
+
+	private async Task ClearErrorMessageAfterDelay()
+	{
+		await Task.Delay(6000);
+		_errorMessage = null;
+		StateHasChanged();
 	}
 }

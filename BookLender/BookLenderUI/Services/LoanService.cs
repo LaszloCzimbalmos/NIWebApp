@@ -37,7 +37,13 @@ namespace BookLenderUI.Services
 
         public async Task CreateLoanAsync(LoanDto loanDto)
         {
-            await _httpClient.PostAsJsonAsync<LoanDto>($"{BaseEndpointUrl}/add-loan", loanDto);
+            var response = await _httpClient.PostAsJsonAsync<LoanDto>($"{BaseEndpointUrl}/add-loan", loanDto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception(errorMessage);
+            }
         }
 
         public async Task UpdateLoan(Loan loan)

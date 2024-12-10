@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookLenderAPI.Exceptions;
 
 namespace BookLenderAPI.Services
 {
@@ -31,7 +32,7 @@ namespace BookLenderAPI.Services
         {
             if (await IsExistingLoan(loan))
             {
-                throw new Exception($"Error! The loan with the book (ID:'{loan.BookId}') and reader (ID:'{loan.ReaderId}') already exist.");
+                throw new AlreadyExistsException($"Error! The loan with the book (ID:'{loan.BookId}') and reader (ID:'{loan.ReaderId}') already exist.");
             }
 
             await _dataBase.AddAsync(loan);
@@ -53,7 +54,7 @@ namespace BookLenderAPI.Services
 
             if (loan is null)
             {
-                throw new Exception($"Loan does not exist with ID '{id}'");
+                throw new NotFoundException($"Loan does not exist with ID '{id}'");
             }
 
             return loan;
@@ -93,11 +94,11 @@ namespace BookLenderAPI.Services
 
             if (book is null)
             {
-                throw new Exception($"Book does not exist with title '{loanDto.BookTitle}'");
+                throw new NotFoundException($"Book does not exist with title '{loanDto.BookTitle}'");
             }
             if (reader is null)
             {
-                throw new Exception($"Reader does not exist with name '{loanDto.ReaderName}'");
+                throw new NotFoundException($"Reader does not exist with name '{loanDto.ReaderName}'");
             }
 
             var todayDate = DateTime.Now;
@@ -114,7 +115,7 @@ namespace BookLenderAPI.Services
                                                            int.Equals(loan.ReaderId, readerId)).FirstOrDefaultAsync();
             if (loan is null)
             {
-                throw new NotSupportedException("Loan does not exist");
+                throw new NotFoundException("Loan does not exist");
             }
 
             return loan;
@@ -144,7 +145,7 @@ namespace BookLenderAPI.Services
         {
             if (id != loan.LoanId)
             {
-                throw new NotSupportedException($"Error! Required IDs does not match to update: " +
+                throw new IdMismatchException($"Error! Required IDs does not match to update: " +
                     $"Updating '{id}' with '{loan.LoanId}'");
             }
 
