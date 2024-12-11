@@ -22,24 +22,19 @@ namespace BookLender.Tests
 
         public BookReaderServiceTests()
         {
-            // Shared in-memory database for all tests
-            if (_dbContextOptions == null)
-            {
-                _dbContextOptions = new DbContextOptionsBuilder<BookLenderContext>()
+            _dbContextOptions ??= new DbContextOptionsBuilder<BookLenderContext>()
                     .UseInMemoryDatabase(databaseName: "BookLenderTestDb")
                     .Options;
-            }
 
             _context = new BookLenderContext(_dbContextOptions);
             _mockLogger = new Mock<ILogger<BookReaderService>>();
 
-            // Seed initial data for all tests
             if (!_context.BookReaders.Any())
             {
                 _context.BookReaders.AddRange(new List<BookReader>
                 {
-                    new BookReader { ReaderId = 1, Name = "John Doe", Address = "123 Main St", BirthDate = new DateTime(2001, 01, 01) },
-                    new BookReader { ReaderId = 2, Name = "Test Laci", Address = "NewYork Main St", BirthDate = new DateTime(2003, 01, 01) },
+                    new() { ReaderId = 1, Name = "John Doe", Address = "123 Main St", BirthDate = new DateTime(2001, 01, 01) },
+                    new() { ReaderId = 2, Name = "Test Laci", Address = "NewYork Main St", BirthDate = new DateTime(2003, 01, 01) },
                 });
                 _context.SaveChanges();
             }
@@ -49,7 +44,6 @@ namespace BookLender.Tests
 
         public void Dispose()
         {
-            // Cleanup after each test, resetting the in-memory database
             _context.Database.EnsureDeleted();
             _context.Dispose();
         }
