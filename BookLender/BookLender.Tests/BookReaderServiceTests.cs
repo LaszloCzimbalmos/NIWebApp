@@ -8,56 +8,67 @@ using BookLenderAPI.Exceptions;
 using BookLenderAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using Xunit;
 
 namespace BookLender.Tests
 {
-    public class BookReaderServiceTests
+    public class BookReaderServiceTests : IDisposable
     {
         private readonly Mock<ILogger<BookReaderService>> _mockLogger;
+        private readonly BookLenderContext _context;
         private readonly BookReaderService _service;
+        private static DbContextOptions<BookLenderContext> _dbContextOptions;
 
         public BookReaderServiceTests()
         {
-            var options = new DbContextOptionsBuilder<BookLenderContext>()
-                .UseInMemoryDatabase(databaseName: "BookLenderTestDb")
-                .Options;
+            // Shared in-memory database for all tests
+            if (_dbContextOptions == null)
+            {
+                _dbContextOptions = new DbContextOptionsBuilder<BookLenderContext>()
+                    .UseInMemoryDatabase(databaseName: "BookLenderTestDb")
+                    .Options;
+            }
 
-            var context = new BookLenderContext(options);
+            _context = new BookLenderContext(_dbContextOptions);
             _mockLogger = new Mock<ILogger<BookReaderService>>();
 
-            context.BookReaders.AddRange(new List<BookReader>
+            // Seed initial data for all tests
+            if (!_context.BookReaders.Any())
             {
-                new BookReader { ReaderId = 1, Name = "John Doe", Address = "123 Main St", BirthDate = new DateTime(2001, 01, 01) },
-                new BookReader { ReaderId = 2, Name = "Test Laci", Address = "NewYork Main St", BirthDate = new DateTime(2003, 01, 01) }
-            });
-            context.SaveChanges();
+                _context.BookReaders.AddRange(new List<BookReader>
+                {
+                    new BookReader { ReaderId = 1, Name = "John Doe", Address = "123 Main St", BirthDate = new DateTime(2001, 01, 01) },
+                    new BookReader { ReaderId = 2, Name = "Test Laci", Address = "NewYork Main St", BirthDate = new DateTime(2003, 01, 01) },
+                });
+                _context.SaveChanges();
+            }
 
-            _service = new BookReaderService(context, _mockLogger.Object);
+            _service = new BookReaderService(_context, _mockLogger.Object);
         }
 
+        public void Dispose()
+        {
+            // Cleanup after each test, resetting the in-memory database
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+        }
 
         [Fact]
         public async Task AddAsync_ThrowsException_WhenReaderAlreadyExists()
         {
             // Arrange
-            var options = new DbContextOptionsBuilder<BookLenderContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            using var context = new BookLenderContext(options);
             var reader = new BookReader { Name = "John Doe", Address = "test street", BirthDate = new DateTime(2001, 01, 01) };
-            context.BookReaders.Add(reader);
-            await context.SaveChangesAsync();
+            await _context.BookReaders.AddAsync(reader);
+            await _context.SaveChangesAsync();
 
-            var logger = Mock.Of<ILogger<BookReaderService>>();
-            var service = new BookReaderService(context, logger);
+            var service = new BookReaderService(_context, _mockLogger.Object);
 
             var newReader = reader;
 
             // Act & Assert
             await Assert.ThrowsAsync<AlreadyExistsException>(() => service.AddAsync(newReader));
         }
-
 
         [Fact]
         public async Task AddAsync_AddsReader_WhenReaderDoesNotExist()
@@ -150,6 +161,7 @@ namespace BookLender.Tests
 
             // Assert
             Assert.Equal(2, result.Count);
+            Assert.NotNull(result.Where(br => string.Equals("John Doe", br.Name)));
         }
     }
 }
