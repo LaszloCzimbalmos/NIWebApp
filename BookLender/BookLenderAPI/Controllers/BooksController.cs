@@ -58,8 +58,17 @@ namespace BookLenderAPI.Controllers
             }
         }
 
+        [HttpGet("{title}")]
+        public async Task <ActionResult<List<Book>>> GetSearchedBooks(string title)
+        {
+            var books = await _bookService.SearchByTitleAsync(title);
+            _logger.LogInformation($"All books retrieved that contains '{title}'");
+
+            return Ok(books);
+        }
+
         [HttpGet("all")]
-        public async Task<ActionResult<List<Book>>> Get()
+        public async Task<ActionResult<List<Book>>> GetAll()
         {
             var books = await _bookService.GetAllAsync();
             _logger.LogInformation("All books retrieved!");

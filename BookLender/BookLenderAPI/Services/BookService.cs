@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BookLenderAPI.Contexts;
 using System.Collections.Generic;
 using BookLenderAPI.Exceptions;
+using System.Linq;
 
 namespace BookLenderAPI.Services
 {
@@ -35,6 +36,12 @@ namespace BookLenderAPI.Services
         {
             return await _dataBase.Books.FirstOrDefaultAsync(b => string.Equals(b.Title, title)); 
         }
+
+        public async Task<List<Book>> SearchByTitleAsync(string title)
+        {
+            return await _dataBase.Books.Where(b => EF.Functions.Like(b.Title.ToLower(), $"%{title.ToLower()}%")).ToListAsync();
+        }
+
         public async Task<Book> GetAsync(int id)
         {
             var book = await _dataBase.FindAsync<Book>(id);
@@ -73,6 +80,12 @@ namespace BookLenderAPI.Services
         public async Task DeleteAsync(int id)
         {
             var book = await GetAsync(id);
+            var loansWithDeletedBook = _dataBase.Loans.Where(loan => int.Equals(loan.BookId, book.InventoryNumber)).ToList();
+
+            foreach(var loan in loansWithDeletedBook)
+            {
+                _dataBase.Remove(loan);
+            }
 
             _dataBase.Remove(book);
             await _dataBase.SaveChangesAsync();

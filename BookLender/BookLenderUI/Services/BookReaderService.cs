@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Json;
-using BookLender.Shared;
+
 using BookLender.Shared.Models;
 using BookLenderUI.Services.Interfaces;
 
@@ -36,6 +36,11 @@ namespace BookLenderUI.Services
             return await _httpClient.GetFromJsonAsync<BookReader>($"{BaseEndpointUrl}/{name}");
         }
 
+        public async Task<List<BookReader>> GetSearchedReadersAsync(string name)
+        {
+            return await _httpClient.GetFromJsonAsync<List<BookReader>>($"{BaseEndpointUrl}/search/{name}");
+        }
+
         public async Task<List<BookReader>> GetAllAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<BookReader>>($"{BaseEndpointUrl}/all");
@@ -48,7 +53,13 @@ namespace BookLenderUI.Services
 
         public async Task DeleteReaderAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{BaseEndpointUrl}/{id}");
+            var response = await _httpClient.DeleteAsync($"{BaseEndpointUrl}/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception(errorMessage);
+            }
         }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using BookLender.Shared.Models;
 using BookLenderAPI.Controllers;
 using BookLenderAPI.Exceptions;
 using BookLenderAPI.Services.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using Moq;
 
 namespace BookLender.Tests.ControllerTests

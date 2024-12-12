@@ -30,6 +30,11 @@ namespace BookLenderUI.Services
             return await _httpClient.GetFromJsonAsync<Book>($"{BaseEndpointUrl}/{id}");
         }
 
+        public async Task<List<Book>> GetSearchedBooksAsync(string title)
+        {
+            return await _httpClient.GetFromJsonAsync<List<Book>>($"{BaseEndpointUrl}/{title}");
+        }
+
         public async Task<List<Book>> GetAllBooksAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<Book>>($"{BaseEndpointUrl}/all");
@@ -42,7 +47,13 @@ namespace BookLenderUI.Services
 
         public async Task DeleteBookAsync(int id)
         {
-            await _httpClient.DeleteAsync($"{BaseEndpointUrl}/{id}");
+            var response = await _httpClient.DeleteAsync($"{BaseEndpointUrl}/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception(errorMessage);
+            }
         }
     }
 }

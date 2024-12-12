@@ -10,7 +10,14 @@
 
 <PageTitle>Home</PageTitle>
 
-<h3>Late Rents</h3>
+<div class="d-flex align-items-center gap-4">
+    <h3 class="fw-bold">Late Rents:</h3>
+    @if (_detailedLateLoans is not null)
+    {
+        <h3><span class="badge bg-danger">@_detailedLateLoans.Count()</span></h3>
+
+    }
+</div>
 
 <div class="container mt-4">
     <div class="row">
@@ -39,14 +46,14 @@
                     else if (!_detailedLateLoans.Any())
                     {
                         <tr>
-                            <td colspan="4" class="text-center">No loans are late.</td>
+                            <td colspan="4" class="text-center">No rents are late.</td>
                         </tr>
                     }
                     else
                     {
                         @foreach (var loan in _detailedLateLoans)
                         {
-                            <tr class="table-danger text-center">
+                            <tr class="table-danger text-center align-middle">
                                 <td>@loan.LoanId</td>
                                 <td>@loan.ReaderName</td>
                                 <td>@loan.BookTitle</td>
@@ -61,7 +68,13 @@
     </div>
 </div>
 
-<h3>Due Soon Rents</h3>
+<div class="d-flex align-items-center gap-4">
+    <h3 class="fw-bold">Due Soon Rents:</h3>
+    @if (_detailedDueSoonLoans is not null)
+    {
+        <h3><span class="badge bg-warning">@_detailedDueSoonLoans.Count()</span></h3>
+    }
+</div>
 
 <div class="container mt-4">
     <div class="row">
@@ -90,18 +103,18 @@
                     else if (!_detailedDueSoonLoans.Any())
                     {
                         <tr>
-                            <td colspan="4" class="text-center">No loans are late.</td>
+                            <td colspan="4" class="text-center">No rents are due soon.</td>
                         </tr>
                     }
                     else
                     {
                         @foreach (var loan in _detailedDueSoonLoans)
                         {
-                            <tr class="table-warning text-center">
+                            <tr class="table-warning text-center align-middle">
                                 <td>@loan.LoanId</td>
                                 <td>@loan.ReaderName</td>
                                 <td>@loan.BookTitle</td>
-                                <td><a href="/loan/@loan.BookId/@loan.ReaderId" class="btn btn-outline-info">Manage</a></td>
+                                <td><a href="/loan/@loan.BookId/@loan.ReaderId" class="btn btn-outline-secondary">Manage</a></td>
                             </tr>
                         }
                     }

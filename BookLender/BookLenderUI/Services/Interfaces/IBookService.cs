@@ -8,6 +8,8 @@ namespace BookLenderUI.Services.Interfaces
 
         public Task<List<Book>> GetAllBooksAsync();
 
+        public Task<List<Book>> GetSearchedBooksAsync(string title);
+
         public Task<Book> GetBookAsync(int id);
 
         public Task UpdateBookAsync(Book newBook);

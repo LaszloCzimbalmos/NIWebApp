@@ -63,6 +63,15 @@ namespace BookLenderAPI.Controllers
             return Ok(await _bookReaderService.GetByNameAsync(name));
         }
 
+        [HttpGet("search/{name}")]
+        public async Task<ActionResult<BookReader>> GetSearchedReaders(string name)
+        {
+            var bookReaders = await _bookReaderService.SearchByNameAsync(name);
+            _logger.LogInformation($"All readers retrieved containing '{name}'");
+
+            return Ok(bookReaders);
+        }
+
         [HttpGet("all")]
         public async Task<ActionResult<List<BookReader>>> Get()
         {
@@ -102,7 +111,12 @@ namespace BookLenderAPI.Controllers
 
                 return Ok();
             }
-            catch (Exception e)
+            catch (ReaderHasActiveLoansException e)
+            {
+                _logger.LogError(e, "An error occurred: {Message}", e.Message);
+                return BadRequest(e.Message);
+            }
+            catch (NotFoundException e)
             {
                 _logger.LogError(e, "An error occurred: {Message}", e.Message);
                 return NotFound(e.Message);

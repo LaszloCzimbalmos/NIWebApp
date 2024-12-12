@@ -15,18 +15,27 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link gap-3" href="" Match="NavLinkMatch.All">
+                <i class="custom-icon">
+                    <img src="Icons/home.svg" alt="Home Icon" style="width: 26px; height: 26px; vertical-align: middle; filter: invert(1)">
+                </i>
+                Home
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="readers">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Readers
+            <NavLink class="nav-link gap-3" href="readers">
+                <i class="custom-icon">
+                    <img src="Icons/person.svg" alt="Reade Icon" style="width: 26px; height: 26px; vertical-align: middle; filter: invert(1)">
+                </i>
+                Readers
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="books">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Books
+            <NavLink class="nav-link gap-3" href="books">
+                <i class="custom-icon">
+                    <img src="Icons/book_nav.svg" alt="Book Icon" style="width: 26px; height: 26px; vertical-align: middle; filter: invert(1)">
+                </i>
+                Books
             </NavLink>
         </div>
     </nav>

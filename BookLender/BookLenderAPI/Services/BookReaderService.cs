@@ -5,6 +5,7 @@ using BookLenderAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookLenderAPI.Services
@@ -53,6 +54,11 @@ namespace BookLenderAPI.Services
                                  .FirstOrDefaultAsync(r => string.Equals(r.Name, name));
         }
 
+        public async Task<List<BookReader>> SearchByNameAsync(string name)
+        {
+            return await _dataBase.BookReaders.Where(br => EF.Functions.Like(br.Name, $"%{name}%")).ToListAsync();
+        }
+
         public async Task UpdateAsync(BookReader newBookReader, int id)
         {
             if (id != newBookReader.ReaderId)
@@ -79,8 +85,12 @@ namespace BookLenderAPI.Services
         public async Task DeleteAsync(int id)
         {
             var bookReader = await GetAsync(id);
+            var loansWithReader = _dataBase.Loans.Where(loan => int.Equals(loan.ReaderId, bookReader.ReaderId));
 
-            //check if there is no loan for this reader
+            if (loansWithReader.Any())
+            {
+                throw new ReaderHasActiveLoansException($"Reader '{bookReader.Name}' has active loans. Close them before deleting.'");
+            }
 
             _dataBase.Remove(bookReader);
             await _dataBase.SaveChangesAsync();

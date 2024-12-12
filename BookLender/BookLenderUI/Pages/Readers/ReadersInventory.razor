@@ -7,6 +7,13 @@
     <h3 class="fw-bold">Reader Inventory</h3>
 
     <a href="readers/add" class="btn btn-outline-warning fw-bold border-2">Add Reader</a>
+
+    <nav class="navbar navbar-light bg-light" style="margin-left: 500px">
+        <form class="form-inline d-flex" @onsubmit="SearchReader">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @bind="_searchedName">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </nav>
 </div>
 
 <div class="container mt-4">
@@ -24,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (bookReaders == null)
+                    @if (_bookReaders == null)
                     {
                         <tr>
                             <td colspan="6" class="text-center">
@@ -34,7 +41,7 @@
                             </td>
                         </tr>
                     }
-                    else if (!bookReaders.Any())
+                    else if (!_bookReaders.Any())
                     {
                         <tr>
                             <td colspan="6" class="text-center">No readers found.</td>
@@ -42,10 +49,10 @@
                     }
                     else
                     {
-                        @foreach (var reader in bookReaders)
+                        @foreach (var reader in _bookReaders)
                         {
-                            <tr>
-                                <td>@reader.ReaderId</td>
+                            <tr class="align-middle">
+                                <td><span class="badge bg-secondary">@reader.ReaderId</span></td>
                                 <td>@reader.Name</td>
                                 <td>@reader.Address</td>
                                 <td>@reader.BirthDate.ToShortDateString()</td>
@@ -61,10 +68,25 @@
 </div>
 
 @code {
-    private List<BookReader> bookReaders;
+    private List<BookReader> _bookReaders;
+    private string _searchedName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        bookReaders = await BookReaderSercive.GetAllAsync();
+        _bookReaders = await BookReaderSercive.GetAllAsync();
+    }
+
+    private async Task SearchReader()
+    {
+        if (!string.IsNullOrWhiteSpace(_searchedName))
+        {
+            _bookReaders = await BookReaderSercive.GetSearchedReadersAsync(_searchedName);
+        }
+        else
+        {
+            _bookReaders = await BookReaderSercive.GetAllAsync();
+        }
+
+        StateHasChanged();
     }
 }

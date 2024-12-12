@@ -9,7 +9,14 @@
 
 <h3>ReaderDetails</h3>
 
-@if (_bookReader is not null && !_errored)
+@if (_errorMessage is not null)
+{
+	<div class="alert alert-danger" role="alert">
+		@_errorMessage
+	</div>
+}
+
+@if (_bookReader is not null)
 {
 
 	<BookReaderForm BookReader="_bookReader" OnValidSubmit="UpdateAsync" ButtonText="Update Reader Data"/>
@@ -24,7 +31,7 @@ else
 }
 
 @code {
-	private bool _errored = false;
+	private string _errorMessage { get; set; }
 	private BookReader _bookReader;
 
 	[Parameter]
@@ -32,16 +39,16 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		try
-		{
-			_bookReader = await BookReaderService.GetReaderAsync(Id);
-		}
-		catch (Exception)
-		{
-			_errored = true;
-		}
-
+		_bookReader = await BookReaderService.GetReaderAsync(Id);
 	}
+
+	private async Task ClearErrorMessageAfterDelay()
+	{
+		await Task.Delay(6000);
+		_errorMessage = null;
+		StateHasChanged();
+	}
+
 	private async Task UpdateAsync()
 	{
 		await BookReaderService.UpdateReaderAsync(_bookReader);
@@ -50,8 +57,17 @@ else
 
 	private async Task DeleteAsync()
 	{
-		await BookReaderService.DeleteReaderAsync(Id);
-		NavigationManager.NavigateTo("readers");
+		try
+		{
+			await BookReaderService.DeleteReaderAsync(Id);
+			NavigationManager.NavigateTo("readers");
+		}
+		catch (Exception e)
+		{
+			_errorMessage = e.Message;
+			StateHasChanged();
+			_ = ClearErrorMessageAfterDelay();
+		}
 	}
 	
 }

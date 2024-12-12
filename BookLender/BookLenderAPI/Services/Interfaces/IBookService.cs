@@ -12,6 +12,8 @@ namespace BookLenderAPI.Services.Interfaces
 
         public Task<Book> GetByTitleAsync(string title);
 
+        public Task<List<Book>> SearchByTitleAsync(string title);
+
         Task<List<Book>> GetAllAsync();
 
         public Task UpdateAsync(int id, Book newBook);

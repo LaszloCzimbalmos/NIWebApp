@@ -18,7 +18,7 @@
 
 @if (_book is not null)
 {
-	<h3>Rent Out @_book.Title</h3>
+	<h3>Rent Out: @_book.Title</h3>
 
 	<LoanForm LoanDto="_loan" OnValidSubmit="CreateAsync" ButtonText="Rent Out" />
 }
@@ -43,6 +43,7 @@ else
 			_loan = new LoanDto()
 				{
 					BookTitle = _book.Title,
+					Months = 1
 				};
 		}
 		catch (Exception e)

@@ -9,7 +9,7 @@
 @inject IBookReaderService BookReaderService
 
 <div class="d-flex align-items-baseline gap-4">
-    <h3 class="fw-bold mb-0">Loan Details</h3>
+    <h3 class="fw-bold mb-0">Rent Details</h3>
 
     <button class="btn btn-outline-warning fw-bold border-2 mt-1" @onclick="() => ExpandRentTime()">Expand Rental Time</button>
 </div>
@@ -48,9 +48,9 @@
                     else
                     {
                         <tr>
-                            <td>@_loan.LoanId</td>
-                            <td>@_loan.ReaderId</td>
-                            <td>@_loan.BookId</td>
+                            <td><span class="badge bg-secondary">@_loan.LoanId</span></td>
+                            <td><span class="badge bg-secondary">@_loan.ReaderId</span></td>
+                            <td><span class="badge bg-secondary">@_loan.BookId</span></td>
                             <td>@_loan.LoanDate.ToShortDateString()</td>
                             <td>@_loan.ReturnDueDate.ToShortDateString()</td>
                             <td>@_remainingRentDays day</td>
@@ -98,7 +98,8 @@
             _loan.LoanDate = DateTime.Now;
 
             await LoanService.UpdateLoan(_loan);
-            NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            _remainingRentDays = CalculateRemainingRentDays(_loan.ReturnDueDate);
+            StateHasChanged();
         }
         catch (Exception)
         {
