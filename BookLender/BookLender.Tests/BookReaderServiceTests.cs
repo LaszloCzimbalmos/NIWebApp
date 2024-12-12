@@ -1,14 +1,17 @@
 using Moq;
+
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using BookLender.Shared.Models;
+using System.Collections.Generic;
+
 using BookLenderAPI.Contexts;
-using BookLenderAPI.Exceptions;
 using BookLenderAPI.Services;
+using BookLenderAPI.Exceptions;
+using BookLender.Shared.Models;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace BookLender.Tests
 {
