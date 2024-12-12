@@ -9,7 +9,6 @@ using BookLenderAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
-using Xunit;
 
 namespace BookLender.Tests
 {
@@ -68,7 +67,7 @@ namespace BookLender.Tests
         public async Task AddAsync_AddsReader_WhenReaderDoesNotExist()
         {
             // Arrange
-            var newReader = new BookReader { Name = "Jane Doe", Address = "456 Another St", BirthDate = DateTime.Now.AddYears(-20) };
+            var newReader = new BookReader { ReaderId = 3, Name = "Jane Doe", Address = "456 Another St", BirthDate = DateTime.Now.AddYears(-20) };
 
             // Act
             await _service.AddAsync(newReader);
@@ -140,8 +139,8 @@ namespace BookLender.Tests
         public async Task DeleteAsync_DeletesReader_WhenReaderExists()
         {
             // Act
-            await _service.DeleteAsync(1);
-            var deletedReader = await _service.GetByNameAsync("John Doe");
+            await _service.DeleteAsync(2);
+            var deletedReader = await _service.GetByNameAsync("Test Laci");
 
             // Assert
             Assert.Null(deletedReader);

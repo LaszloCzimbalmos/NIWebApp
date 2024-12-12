@@ -64,5 +64,9 @@ namespace BookLender.Shared.Models
             LoanDate = loanDate;
             ReturnDueDate = returnDueDate;
         }
+
+        public Loan()
+        {
+        }
     }
 }
