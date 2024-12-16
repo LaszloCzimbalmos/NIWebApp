@@ -53,7 +53,7 @@
                         {
                             <tr class="align-middle">
                                 <td><span class="badge bg-secondary">@reader.ReaderId</span></td>
-                                <td>@reader.Name</td>
+                                <td><span role="button" onclick="copyToClipboard(this)">@reader.Name</span></td>
                                 <td>@reader.Address</td>
                                 <td>@reader.BirthDate.ToShortDateString()</td>
                                 <td><a href="/reader/@reader.ReaderId" class="btn btn-outline-info">View</a></td>
@@ -65,6 +65,20 @@
             </table>
         </div>
     </div>
+
+    <script>
+        function copyToClipboard(element) {
+            const textToCopy = element.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                element.classList.add("badge", "bg-success", "text-white");
+                setTimeout(() => element.classList.remove("badge", "bg-success", "text-white"), 500);
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+            });
+        }
+    </script>
+
 </div>
 
 @code {
