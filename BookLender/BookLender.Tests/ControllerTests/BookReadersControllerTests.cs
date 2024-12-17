@@ -69,7 +69,7 @@ namespace BookLender.Tests.ControllerTests
             _mockService.Setup(s => s.GetAsync(1)).ReturnsAsync(reader);
 
             // Act
-            var result = await _controller.Get(1);
+            var result = await _controller.GetReader(1);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -85,7 +85,7 @@ namespace BookLender.Tests.ControllerTests
                 .ThrowsAsync(new NotFoundException("Reader not found"));
 
             // Act
-            var result = await _controller.Get(99);
+            var result = await _controller.GetReader(99);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result.Result);
@@ -101,7 +101,7 @@ namespace BookLender.Tests.ControllerTests
             _mockService.Setup(s => s.GetByNameAsync("John Doe")).ReturnsAsync(reader);
 
             // Act
-            var result = await _controller.Get("John Doe");
+            var result = await _controller.GetReaderByName("John Doe");
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -122,7 +122,7 @@ namespace BookLender.Tests.ControllerTests
             _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(readers);
 
             // Act
-            var result = await _controller.Get();
+            var result = await _controller.GetAllReader();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);

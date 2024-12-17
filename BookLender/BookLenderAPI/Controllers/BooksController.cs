@@ -68,7 +68,7 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<List<Book>>> GetAll()
+        public async Task<ActionResult<List<Book>>> GetAllBook()
         {
             var books = await _bookService.GetAllAsync();
             _logger.LogInformation("All books retrieved!");

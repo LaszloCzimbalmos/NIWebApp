@@ -58,7 +58,7 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("list-loans/{name}")]
-        public async Task<ActionResult<List<Book>>> Get(string name)
+        public async Task<ActionResult<List<Book>>> GetLoanForReaderByName(string name)
         {
             try
             {
@@ -75,14 +75,14 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("due-soon")]
-        public async Task<ActionResult<List<Loan>>> GetDueSoon()
+        public async Task<ActionResult<List<Loan>>> GetDueSoonLoans()
         {
             _logger.LogInformation("Due soon rents are retrieved!");
             return Ok(await _loanService.GetDueSoonLoans());
         }
 
         [HttpGet("late")]
-        public async Task<ActionResult<List<Loan>>> GetLate()
+        public async Task<ActionResult<List<Loan>>> GetLateLoans()
         {
             _logger.LogInformation("Late rents are retrieved!");
             return Ok(await _loanService.GetLateLoans());

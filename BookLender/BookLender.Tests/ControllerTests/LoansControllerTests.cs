@@ -95,7 +95,7 @@ namespace BookLender.Tests.ControllerTests
             _loanServiceMock.Setup(service => service.GetRentedBooksForReader("John")).ReturnsAsync(books);
 
             // Act
-            var result = await _controller.Get("John");
+            var result = await _controller.GetLoanForReaderByName("John");
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -110,7 +110,7 @@ namespace BookLender.Tests.ControllerTests
             _loanServiceMock.Setup(service => service.GetDueSoonLoans()).ReturnsAsync(loans);
 
             // Act
-            var result = await _controller.GetDueSoon();
+            var result = await _controller.GetDueSoonLoans();
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);

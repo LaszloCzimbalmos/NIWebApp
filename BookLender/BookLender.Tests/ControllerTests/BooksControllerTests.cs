@@ -122,7 +122,7 @@ namespace BookLender.Tests.ControllerTests
             _mockBookService.Setup(service => service.GetAllAsync()).ReturnsAsync(books);
 
             // Act
-            var result = await _controller.GetAll();
+            var result = await _controller.GetAllBook();
 
             // Assert
             var actionResult = Assert.IsType<OkObjectResult>(result.Result);

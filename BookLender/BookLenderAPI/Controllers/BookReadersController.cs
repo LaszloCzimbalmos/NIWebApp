@@ -41,7 +41,7 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<BookReader>> Get(int id)
+        public async Task<ActionResult<BookReader>> GetReader(int id)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<BookReader>> Get(string name)
+        public async Task<ActionResult<BookReader>> GetReaderByName(string name)
         {
             return Ok(await _bookReaderService.GetByNameAsync(name));
         }
@@ -73,7 +73,7 @@ namespace BookLenderAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<List<BookReader>>> Get()
+        public async Task<ActionResult<List<BookReader>>> GetAllReader()
         {
             return Ok(await _bookReaderService.GetAllAsync());
         }
